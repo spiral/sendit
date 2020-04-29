@@ -11,7 +11,7 @@ Example:
 The component provides the ability to compose content-rich email templates using Stempler views:
 
 ```html
-<extends:sendit:builder subject="Hello world"/>
+<extends:layouts.email subject="Hello world"/>
 <use:bundle path="sendit:bundle"/>
 
 <email:attach path="path/to/file.file" name="attachment.file"/>
