@@ -11,15 +11,15 @@ Example:
 The component provides the ability to compose content-rich email templates using Stempler views:
 
 ```html
-<extends:layouts.email subject="Hello world"/>
+<extends:sendit:builder subject="Hello world"/>
 <use:bundle path="sendit:bundle"/>
 
 <email:attach path="path/to/file.file" name="attachment.file"/>
 
-<block:body>
+<block:html>
     <p>Hello, {{ $name }}!</p>
     <p><email:image path="path/to/image.png"/></p>
-</block:body>
+</block:html>
 ```
 
 License:
