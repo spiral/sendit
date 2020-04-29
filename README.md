@@ -6,6 +6,52 @@ SendIt
 
 Email builder and queue handler.
 
+Installation:
+--------
+To install the component:
+
+```bash
+$ composer require spiral/sendit
+```
+
+> Make sure to install required `symfony/mailer` drivers.
+
+Activate the component bootloaders:
+
+```php
+use Spiral\SendIt\Bootloader as Sendit;
+// ...
+
+protected const LOAD = [
+    // ...
+    Sendit\MailerBootloader::class,
+    Sendit\BuilderBootloader::class,
+    // ...
+];
+```
+
+Configure the component using `app/config/mailer.php` file:
+
+```php
+// Amazon SES
+return [
+    'dsn'  => sprintf(
+        'ses+smtps://%s:%s@ses?region=%s',
+        rawurlencode(env('AWS_KEY')),
+        rawurlencode(env('AWS_SECRET')),
+        env('AWS_REGION')
+    ),
+    'from' => 'Project Name <no-reply@project.com>',
+];
+```
+
+Or specify ENV variables:
+
+```dotenv
+MAILER_DSN = "smtp://..."
+MAILER_FROM = "Project Name <no-reply@project.com>"
+```
+
 Example:
 --------
 The component provides the ability to compose content-rich email templates using Stempler views:
