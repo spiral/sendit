@@ -28,7 +28,7 @@ final class MailQueue implements MailerInterface
     private $queue;
 
     /**
-     * @param MailerConfig $config
+     * @param MailerConfig   $config
      * @param QueueInterface $queue
      */
     public function __construct(MailerConfig $config, QueueInterface $queue)

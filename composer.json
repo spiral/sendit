@@ -32,7 +32,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Spiral\\SendIt\\Tests\\": "tests/SendIt/"
+      "Spiral\\SendIt\\Tests\\": "tests/SendIt/",
+      "Spiral\\App\\": "tests/app/src"
     }
   }
 }

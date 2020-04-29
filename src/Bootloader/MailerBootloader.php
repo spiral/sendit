@@ -18,7 +18,7 @@ use Spiral\Config\ConfiguratorInterface;
 use Spiral\Jobs\JobRegistry;
 use Spiral\Mailer\MailerInterface;
 use Spiral\SendIt\Config\MailerConfig;
-use Spiral\SendIt\SendJob;
+use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\MessageSerializer;
 use Symfony\Component\Mailer\Mailer;
@@ -36,7 +36,7 @@ final class MailerBootloader extends Bootloader
 
     protected const SINGLETONS = [
         MailerInterface::class => MailQueue::class,
-        SendJob::class         => SendJob::class,
+        MailJob::class         => MailJob::class,
         SymfonyMailer::class   => [self::class, 'mailer']
     ];
 
@@ -63,7 +63,7 @@ final class MailerBootloader extends Bootloader
             'from'     => $env->get('MAILER_FROM', 'Spiral <sendit@local.host>'),
         ]);
 
-        $jobRegistry->setHandler(MailQueue::JOB_NAME, SendJob::class);
+        $jobRegistry->setHandler(MailQueue::JOB_NAME, MailJob::class);
         $jobRegistry->setSerializer(MailQueue::JOB_NAME, MessageSerializer::class);
     }
 

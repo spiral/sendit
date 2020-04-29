@@ -19,7 +19,7 @@ use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
-final class SendJob implements HandlerInterface
+final class MailJob implements HandlerInterface
 {
     use LoggerTrait;
 
@@ -33,8 +33,8 @@ final class SendJob implements HandlerInterface
     private $renderer;
 
     /**
-     * @param MailerConfig $config
-     * @param SymfonyMailer $mailer
+     * @param MailerConfig      $config
+     * @param SymfonyMailer     $mailer
      * @param RendererInterface $renderer
      */
     public function __construct(MailerConfig $config, SymfonyMailer $mailer, RendererInterface $renderer)

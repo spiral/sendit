@@ -19,7 +19,7 @@ use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\MessageSerializer;
 use Spiral\SendIt\RendererInterface;
-use Spiral\SendIt\SendJob;
+use Spiral\SendIt\MailJob;
 use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -32,7 +32,7 @@ class JobTest extends TestCase
         $renderer = m::mock(RendererInterface::class);
         $logger = m::mock(LoggerInterface::class);
 
-        $handler = new SendJob(
+        $handler = new MailJob(
             new MailerConfig(['from' => 'Spiral <no-reply@spiral.dev>']),
             $mailer,
             $renderer
@@ -74,7 +74,7 @@ class JobTest extends TestCase
         $renderer = m::mock(RendererInterface::class);
         $logger = m::mock(LoggerInterface::class);
 
-        $handler = new SendJob(
+        $handler = new MailJob(
             new MailerConfig(['from' => 'Spiral <no-reply@spiral.dev>']),
             $mailer,
             $renderer

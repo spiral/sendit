@@ -31,7 +31,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist
       - name: Check coding standards
         run: |
-          vendor/bin/spiral-cs check src tests
+          vendor/bin/spiral-cs check src tests/SendIt
       - name: Execute Tests
         run: |
           vendor/bin/phpunit --coverage-clover=coverage.xml
