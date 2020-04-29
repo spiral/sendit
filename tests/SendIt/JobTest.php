@@ -26,7 +26,7 @@ use Symfony\Component\Mime\Email;
 
 class JobTest extends TestCase
 {
-    public function testHandler()
+    public function testHandler(): void
     {
         $mailer = m::mock(MailerInterface::class);
         $renderer = m::mock(RendererInterface::class);
@@ -39,7 +39,7 @@ class JobTest extends TestCase
         );
         $handler->setLogger($logger);
 
-        $mail = new Message("test", ['email@domain.com'], ['key' => 'value']);
+        $mail = new Message('test', ['email@domain.com'], ['key' => 'value']);
         $mail->setFrom('admin@spiral.dev');
         $mail->setReplyTo('admin@spiral.dev');
         $mail->setCC('admin@google.com');
@@ -68,7 +68,7 @@ class JobTest extends TestCase
         );
     }
 
-    public function testHandlerError()
+    public function testHandlerError(): void
     {
         $mailer = m::mock(MailerInterface::class);
         $renderer = m::mock(RendererInterface::class);
@@ -81,7 +81,7 @@ class JobTest extends TestCase
         );
         $handler->setLogger($logger);
 
-        $mail = new Message("test", ['email@domain.com'], ['key' => 'value']);
+        $mail = new Message('test', ['email@domain.com'], ['key' => 'value']);
         $mail->setFrom('admin@spiral.dev');
         $mail->setReplyTo('admin@spiral.dev');
         $mail->setCC('admin@google.com');
@@ -96,7 +96,7 @@ class JobTest extends TestCase
             return true;
         })->andReturn($email);
 
-        $mailer->expects('send')->with($email)->andThrow(new TransportException("failed"));
+        $mailer->expects('send')->with($email)->andThrow(new TransportException('failed'));
 
         $logger->expects('error')->with(
             'Failed to send `test` to "email@domain.com": failed',

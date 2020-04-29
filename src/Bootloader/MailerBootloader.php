@@ -55,7 +55,7 @@ final class MailerBootloader extends Bootloader
      * @param EnvironmentInterface $env
      * @param JobRegistry          $jobRegistry
      */
-    public function boot(EnvironmentInterface $env, JobRegistry $jobRegistry)
+    public function boot(EnvironmentInterface $env, JobRegistry $jobRegistry): void
     {
         $this->config->setDefaults('mailer', [
             'dsn'      => $env->get('MAILER_DSN', ''),

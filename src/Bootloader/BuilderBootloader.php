@@ -33,7 +33,7 @@ final class BuilderBootloader extends Bootloader
     /**
      * @param ViewsBootloader $views
      */
-    public function boot(ViewsBootloader $views)
+    public function boot(ViewsBootloader $views): void
     {
         $views->addDirectory('sendit', __DIR__ . '/../../views');
     }

@@ -17,9 +17,9 @@ use Spiral\SendIt\MessageSerializer;
 
 class SerializerTest extends TestCase
 {
-    public function testSerializeUnserialize()
+    public function testSerializeUnserialize(): void
     {
-        $mail = new Message("test", ['email@domain.com'], ['key' => 'value']);
+        $mail = new Message('test', ['email@domain.com'], ['key' => 'value']);
         $mail->setFrom('admin@spiral.dev');
         $mail->setReplyTo('admin@spiral.dev');
         $mail->setCC('admin@google.com');

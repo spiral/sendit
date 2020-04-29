@@ -22,7 +22,7 @@ use Spiral\SendIt\MessageSerializer;
 
 class QueueTest extends TestCase
 {
-    public function testQueue()
+    public function testQueue(): void
     {
         $queue = m::mock(QueueInterface::class);
 
@@ -30,7 +30,7 @@ class QueueTest extends TestCase
             'pipeline' => 'mailer'
         ]), $queue);
 
-        $mail = new Message("test", ['email@domain.com'], ['key' => 'value']);
+        $mail = new Message('test', ['email@domain.com'], ['key' => 'value']);
         $mail->setFrom('admin@spiral.dev');
         $mail->setReplyTo('admin@spiral.dev');
         $mail->setCC('admin@google.com');
