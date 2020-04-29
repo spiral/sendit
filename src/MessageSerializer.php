@@ -59,8 +59,8 @@ final class MessageSerializer implements SerializerInterface
             $message->setReplyTo($payload['replyTo']);
         }
 
-        $message->setCC($payload['cc']);
-        $message->setBCC($payload['bcc']);
+        $message->setCC(...$payload['cc']);
+        $message->setBCC(...$payload['bcc']);
 
         return $message;
     }
