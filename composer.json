@@ -1,0 +1,38 @@
+{
+  "name": "spiral/sendit",
+  "type": "library",
+  "description": "Email builder and queue handler",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Wolfy-J",
+      "email": "wolfy.jd@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "ext-json": "*",
+    "symfony/mailer": "^5.0",
+    "spiral/logger": "^1.2",
+    "spiral/mailer": "^1.0",
+    "spiral/framework": "^2.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~8.0",
+    "mockery/mockery": "^1.1",
+    "spiral/code-style": "^1.0",
+    "spiral/jobs": "^2.1",
+    "spiral/views": "^1.1",
+    "spiral/stempler-bridge": "^1.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Spiral\\SendIt\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Spiral\\SendIt\\Tests\\": "tests/SendIt/"
+    }
+  }
+}
