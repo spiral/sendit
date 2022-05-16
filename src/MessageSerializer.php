@@ -11,11 +11,17 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt;
 
+use Spiral\Jobs\SerializerInterface;
 use Spiral\Mailer\Message;
 use Spiral\Mailer\MessageInterface;
 
-final class MessageSerializer
+final class MessageSerializer implements SerializerInterface
 {
+    public function serialize(string $jobType, array $payload): string
+    {
+        return json_encode($payload);
+    }
+
     public static function pack(MessageInterface $message): array
     {
         return [

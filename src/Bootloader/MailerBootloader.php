@@ -25,8 +25,9 @@ use Spiral\Queue\Bootloader\QueueBootloader;
 use Spiral\Queue\HandlerRegistryInterface;
 use Spiral\Queue\QueueConnectionProviderInterface;
 use Spiral\SendIt\Config\MailerConfig;
-use Spiral\SendIt\JsonJobSerializer;
+use Spiral\SendIt\MailJob;
 use Spiral\SendIt\MailQueue;
+use Spiral\SendIt\MessageSerializer;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
 use Symfony\Component\Mailer\Transport;
@@ -34,7 +35,7 @@ use Symfony\Component\Mailer\Transport;
 /**
  * Enables email sending pipeline.
  */
-class MailerBootloader extends Bootloader
+final class MailerBootloader extends Bootloader
 {
     protected const DEPENDENCIES = [
         JobsBootloader::class,
@@ -42,6 +43,7 @@ class MailerBootloader extends Bootloader
     ];
 
     protected const SINGLETONS = [
+        MailJob::class => MailJob::class,
         SymfonyMailer::class => [self::class, 'mailer'],
     ];
 
@@ -71,9 +73,8 @@ class MailerBootloader extends Bootloader
         if ($container->has(JobRegistry::class)) {
             // Will be removed since v3.0
             $registry = $container->get(JobRegistry::class);
-            $registry->setHandler(MailQueue::JOB_NAME, \Spiral\SendIt\Jobs\MailJobAdapter::class);
-            $registry->setSerializer(MailQueue::JOB_NAME, JsonJobSerializer::class);
-
+            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
+            $registry->setSerializer(MailQueue::JOB_NAME, MessageSerializer::class);
             $container->bindSingleton(
                 MailerInterface::class,
                 static function (MailerConfig $config) use ($container) {
@@ -100,7 +101,7 @@ class MailerBootloader extends Bootloader
 
         if ($container->has(HandlerRegistryInterface::class)) {
             $registry = $container->get(HandlerRegistryInterface::class);
-            $registry->setHandler(MailQueue::JOB_NAME, \Spiral\SendIt\MailJob::class);
+            $registry->setHandler(MailQueue::JOB_NAME, MailJob::class);
         }
     }
 

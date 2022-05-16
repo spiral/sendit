@@ -1,20 +1,26 @@
 <?php
 
+/**
+ * Spiral Framework.
+ *
+ * @license   MIT
+ * @author    Anton Titov (Wolfy-J)
+ */
+
 declare(strict_types=1);
 
 namespace Spiral\SendIt;
 
-use Spiral\Core\Container\SingletonInterface;
+use Spiral\Jobs\HandlerInterface;
 use Spiral\Logger\Traits\LoggerTrait;
 use Spiral\Queue\Exception\InvalidArgumentException;
-use Spiral\Queue\HandlerInterface;
 use Spiral\SendIt\Config\MailerConfig;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
-final class MailJob implements HandlerInterface, SingletonInterface
+final class MailJob implements HandlerInterface, \Spiral\Queue\HandlerInterface
 {
     use LoggerTrait;
 
