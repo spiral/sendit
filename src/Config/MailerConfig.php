@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\SendIt\Config;
@@ -17,36 +10,30 @@ final class MailerConfig extends InjectableConfig
 {
     public const CONFIG = 'mailer';
 
-    /** @var array */
-    protected $config = [
-        'dsn' => '',
-        'from' => '',
-        'queue' => null,
-        'pipeline' => null,
-        'queueConnection' => null,
-    ];
+    public function __construct(
+        array $config = [
+            'dsn' => '',
+            'from' => '',
+            'queue' => null,
+            'queueConnection' => null,
+        ]
+    ) {
+        parent::__construct($config);
+    }
 
     public function getDSN(): string
     {
-        return $this->config['dsn'];
+        return $this->config['dsn'] ?? '';
     }
 
     public function getFromAddress(): string
     {
-        return $this->config['from'];
-    }
-
-    /**
-     * @deprecated since v2.9.
-     */
-    public function getQueuePipeline(): ?string
-    {
-        return $this->getQueue();
+        return $this->config['from'] ?? '';
     }
 
     public function getQueue(): ?string
     {
-        return $this->config['queue'] ?? $this->config['pipeline'] ?? null;
+        return $this->config['queue'] ?? null;
     }
 
     public function getQueueConnection(): ?string

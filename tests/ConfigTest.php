@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\SendIt;
@@ -32,22 +25,12 @@ class ConfigTest extends TestCase
         $this->assertSame('foo', $cfg->getQueueConnection());
     }
 
-    public function testWithDeprecatedPipeline(): void
-    {
-        $cfg = new MailerConfig([
-            'pipeline' => 'emails',
-        ]);
-
-        $this->assertSame('emails', $cfg->getQueuePipeline());
-    }
-
     public function testDefaultConfig(): void
     {
         $env = new Environment();
 
         $config = new MailerConfig([
             'dsn' => $env->get('MAILER_DSN', ''),
-            'pipeline' => $env->get('MAILER_QUEUE', $env->get('MAILER_PIPELINE', 'local')),
             'queue' => $env->get('MAILER_QUEUE', 'local'),
             'from' => $env->get('MAILER_FROM', 'Spiral <sendit@local.host>'),
             'queueConnection' => $env->get('MAILER_QUEUE_CONNECTION'),
@@ -68,30 +51,15 @@ class ConfigTest extends TestCase
         ]);
 
         $this->assertSame('emails', $config->getQueue());
-        $this->assertSame('emails', $config->getQueuePipeline());
     }
 
     public function testQueueWithNull(): void
     {
         $config = new MailerConfig([
-            'pipeline' => null,
             'queue' => null,
         ]);
 
         $this->assertNull($config->getQueue());
-        $this->assertNull($config->getQueuePipeline());
-    }
-
-    public function testDefaultConfigWithPippeline(): void
-    {
-        $env = new Environment(['MAILER_PIPELINE' => 'emails']);
-
-        $config = new MailerConfig([
-            'pipeline' => $env->get('MAILER_QUEUE', $env->get('MAILER_PIPELINE', 'local')),
-        ]);
-
-        $this->assertSame('emails', $config->getQueue());
-        $this->assertSame('emails', $config->getQueuePipeline());
     }
 
     public function testGetsQueueConnectionWithoutKey(): void

@@ -4,34 +4,24 @@ declare(strict_types=1);
 
 namespace Spiral\SendIt;
 
-use Spiral\Core\Container\SingletonInterface;
-use Spiral\Logger\Traits\LoggerTrait;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Spiral\Queue\Exception\InvalidArgumentException;
 use Spiral\Queue\HandlerInterface;
 use Spiral\SendIt\Config\MailerConfig;
+use Spiral\SendIt\Event\MessageNotSent;
+use Spiral\SendIt\Event\MessageSent;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface as SymfonyMailer;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
 
-final class MailJob implements HandlerInterface, SingletonInterface
+final class MailJob implements HandlerInterface
 {
-    use LoggerTrait;
-
-    /** @var MailerConfig */
-    private $config;
-
-    /** @var SymfonyMailer */
-    private $mailer;
-
-    /**  @var RendererInterface */
-    private $renderer;
-
-    public function __construct(MailerConfig $config, SymfonyMailer $mailer, RendererInterface $renderer)
-    {
-        $this->config = $config;
-        $this->mailer = $mailer;
-        $this->renderer = $renderer;
+    public function __construct(
+        private readonly MailerConfig $config,
+        private readonly SymfonyMailer $mailer,
+        private readonly RendererInterface $renderer,
+        private readonly ?EventDispatcherInterface $dispatcher = null
+    ) {
     }
 
     /**
@@ -40,10 +30,10 @@ final class MailJob implements HandlerInterface, SingletonInterface
      *
      * @psalm-suppress ParamNameMismatch
      */
-    public function handle(string $name, string $id, $payload): void
+    public function handle(string $name, string $id, string|array $payload): void
     {
         if (\is_string($payload)) {
-            $payload = json_decode($payload, true);
+            $payload = \json_decode($payload, true, 512, JSON_THROW_ON_ERROR);
         }
 
         if (!\is_array($payload)) {
@@ -58,44 +48,14 @@ final class MailJob implements HandlerInterface, SingletonInterface
             $email->from(Address::create($this->config->getFromAddress()));
         }
 
-        $recipients = $this->getRecipients($email);
-
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface $e) {
-            $this->getLogger()->error(
-                sprintf(
-                    'Failed to send `%s` to "%s": %s',
-                    $message->getSubject(),
-                    implode('", "', $recipients),
-                    $e->getMessage()
-                ),
-                ['emails' => $recipients]
-            );
+            $this->dispatcher?->dispatch(new MessageNotSent($email, $e));
 
             throw $e;
         }
 
-        $this->getLogger()->debug(
-            sprintf(
-                'Sent `%s` to "%s"',
-                $message->getSubject(),
-                implode('", "', $recipients)
-            ),
-            ['emails' => $recipients]
-        );
-    }
-
-    private function getRecipients(Email $message): array
-    {
-        $emails = [];
-
-        $addresses = array_merge($message->getTo(), $message->getCc(), $message->getBcc());
-
-        foreach ($addresses as $address) {
-            $emails[] = $address->toString();
-        }
-
-        return $emails;
+        $this->dispatcher?->dispatch(new MessageSent($email));
     }
 }
