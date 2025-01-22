@@ -36,10 +36,8 @@ class RenderTest extends TestCase
             ] + parent::defineDirectories($root);
     }
 
-    protected function tearDown(): void
+    public function tearDown(): void
     {
-        parent::tearDown();
-
         foreach (glob(__DIR__ . '/App/runtime/cache/views/*.php') as $file) {
             @unlink($file);
         }
@@ -55,11 +53,11 @@ class RenderTest extends TestCase
     {
         $email = $this->send(new Message('email', ['email@domain.com'], ['name' => 'Antony']));
 
-        self::assertSame('Demo Email', $email->getSubject());
+        $this->assertSame('Demo Email', $email->getSubject());
 
         $body = $email->getBody()->toString();
-        self::assertStringContainsString('bootstrap.txt', $body);
-        self::assertStringContainsString('<p>Hello, Antony!</p>', $body);
+        $this->assertStringContainsString('bootstrap.txt', $body);
+        $this->assertStringContainsString('<p>Hello, Antony!</p>', $body);
     }
 
     private function send(MessageInterface $message): Email
