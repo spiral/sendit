@@ -17,22 +17,8 @@ class QueueTest extends TestCase
 {
     /** @var m\LegacyMockInterface|m\MockInterface|QueueInterface */
     private $queue;
-    /** @var MailQueue */
-    private $mailer;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->queue = m::mock(QueueInterface::class);
-
-        $this->mailer = new MailQueue(
-            new MailerConfig([
-                'queue' => 'mailer',
-            ]),
-            $this->queue
-        );
-    }
+    private MailQueue $mailer;
 
     public function testQueue(): void
     {
@@ -43,14 +29,14 @@ class QueueTest extends TestCase
         $mail->setBCC('admin2@google.com');
 
         $this->queue->expects('push')->withArgs(
-            function ($job, $data, Options $options) use ($mail) {
-                $this->assertSame(MailQueue::JOB_NAME, $job);
-                $this->assertSame($data, MessageSerializer::pack($mail));
-                $this->assertSame('mailer', $options->getQueue());
-                $this->assertNull($options->getDelay());
+            function ($job, $data, Options $options) use ($mail): bool {
+                self::assertSame(MailQueue::JOB_NAME, $job);
+                self::assertSame($data, MessageSerializer::pack($mail));
+                self::assertSame('mailer', $options->getQueue());
+                self::assertNull($options->getDelay());
 
                 return true;
-            }
+            },
         );
 
         $this->mailer->send($mail);
@@ -68,26 +54,40 @@ class QueueTest extends TestCase
         $mail3->setDelay(200);
 
         $this->queue->expects('push')->once()->withArgs(
-            function ($job, $data, Options $options) {
-                $this->assertSame(30, $options->getDelay());
+            function ($job, $data, Options $options): bool {
+                self::assertSame(30, $options->getDelay());
                 return true;
-            }
+            },
         );
 
         $this->queue->expects('push')->once()->withArgs(
-            function ($job, $data, Options $options) {
-                $this->assertSame(100, $options->getDelay());
+            function ($job, $data, Options $options): bool {
+                self::assertSame(100, $options->getDelay());
                 return true;
-            }
+            },
         );
 
         $this->queue->expects('push')->once()->withArgs(
-            function ($job, $data, Options $options) {
-                $this->assertSame(200, $options->getDelay());
+            function ($job, $data, Options $options): bool {
+                self::assertSame(200, $options->getDelay());
                 return true;
-            }
+            },
         );
 
         $this->mailer->send($mail1, $mail2, $mail3);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->queue = m::mock(QueueInterface::class);
+
+        $this->mailer = new MailQueue(
+            new MailerConfig([
+                'queue' => 'mailer',
+            ]),
+            $this->queue,
+        );
     }
 }

@@ -31,16 +31,9 @@ class RenderTest extends TestCase
     public function defineDirectories(string $root): array
     {
         return [
-                'root' => __DIR__ . '/App',
-                'app'  => __DIR__ . '/App'
-            ] + parent::defineDirectories($root);
-    }
-
-    public function tearDown(): void
-    {
-        foreach (glob(__DIR__ . '/App/runtime/cache/views/*.php') as $file) {
-            @unlink($file);
-        }
+            'root' => __DIR__ . '/App',
+            'app'  => __DIR__ . '/App',
+        ] + parent::defineDirectories($root);
     }
 
     public function testRenderError(): void
@@ -53,11 +46,20 @@ class RenderTest extends TestCase
     {
         $email = $this->send(new Message('email', ['email@domain.com'], ['name' => 'Antony']));
 
-        $this->assertSame('Demo Email', $email->getSubject());
+        self::assertSame('Demo Email', $email->getSubject());
 
         $body = $email->getBody()->toString();
-        $this->assertStringContainsString('bootstrap.txt', $body);
-        $this->assertStringContainsString('<p>Hello, Antony!</p>', $body);
+        self::assertStringContainsString('bootstrap.txt', $body);
+        self::assertStringContainsString('<p>Hello, Antony!</p>', $body);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        foreach (glob(__DIR__ . '/App/runtime/cache/views/*.php') as $file) {
+            @unlink($file);
+        }
     }
 
     private function send(MessageInterface $message): Email
@@ -65,7 +67,7 @@ class RenderTest extends TestCase
         $this->getContainer()->get(MailJob::class)->handle(
             MailQueue::JOB_NAME,
             'id',
-            json_encode(MessageSerializer::pack($message))
+            json_encode(MessageSerializer::pack($message)),
         );
 
         return $this->getContainer()->get(MailerInterface::class)->getLast();
