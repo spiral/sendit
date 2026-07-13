@@ -18,6 +18,7 @@ final class BuilderBootloader extends Bootloader
     protected const DEPENDENCIES = [
         StemplerBootloader::class,
     ];
+
     protected const SINGLETONS = [
         RendererInterface::class => ViewRenderer::class,
     ];

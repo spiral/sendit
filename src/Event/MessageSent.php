@@ -9,6 +9,7 @@ use Symfony\Component\Mime\Email;
 final class MessageSent
 {
     public function __construct(
-        public readonly Email $message,
-    ) {}
+        public readonly Email $message
+    ) {
+    }
 }

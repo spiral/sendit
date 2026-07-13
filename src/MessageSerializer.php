@@ -9,6 +9,11 @@ use Spiral\Mailer\MessageInterface;
 
 final class MessageSerializer
 {
+    public function serialize(string $jobType, array $payload): string
+    {
+        return \json_encode($payload, JSON_THROW_ON_ERROR);
+    }
+
     public static function pack(MessageInterface $message): array
     {
         return [
@@ -39,10 +44,5 @@ final class MessageSerializer
         $message->setOptions($payload['options']);
 
         return $message;
-    }
-
-    public function serialize(string $jobType, array $payload): string
-    {
-        return \json_encode($payload, JSON_THROW_ON_ERROR);
     }
 }

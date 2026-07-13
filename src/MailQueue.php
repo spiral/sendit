@@ -16,8 +16,9 @@ final class MailQueue implements MailerInterface
 
     public function __construct(
         private readonly MailerConfig $config,
-        private readonly QueueInterface $queue,
-    ) {}
+        private readonly QueueInterface $queue
+    ) {
+    }
 
     public function send(MessageInterface ...$message): void
     {
@@ -27,7 +28,7 @@ final class MailQueue implements MailerInterface
             $this->queue->push(
                 self::JOB_NAME,
                 MessageSerializer::pack($msg),
-                $options->withDelay($msg->getOptions()['delay'] ?? null),
+                $options->withDelay($msg->getOptions()['delay'] ?? null)
             );
         }
     }

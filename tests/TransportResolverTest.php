@@ -22,13 +22,13 @@ final class TransportResolverTest extends TestCase
         $transportResolver = new TransportResolver(new Transport([]));
 
         $transportResolver->registerTransport($transportFactory);
-        self::assertCount(1, $transportResolver->getTransports());
+        $this->assertCount(1, $transportResolver->getTransports());
     }
 
     public function testCanResolveRegisteredTransport(): void
     {
         $transportFactory = m::mock(TransportFactoryInterface::class);
-        $arg = static fn(Transport\Dsn $dsn): bool => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
+        $arg = fn(Transport\Dsn $dsn) => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
 
         $transportFactory->shouldReceive('supports')->once()->withArgs($arg)->andReturn(true);
         $transportFactory->shouldReceive('create')->once()->withArgs($arg)
@@ -38,13 +38,13 @@ final class TransportResolverTest extends TestCase
 
         $transportResolver->registerTransport($transportFactory);
 
-        self::assertSame($transport, $transportResolver->resolve('smtp://localhost'));
+        $this->assertSame($transport, $transportResolver->resolve('smtp://localhost'));
     }
 
     public function testCanResolveRegisteredDefaultTransport(): void
     {
         $transportFactory = m::mock(TransportFactoryInterface::class);
-        $arg = static fn(Transport\Dsn $dsn): bool => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
+        $arg = fn(Transport\Dsn $dsn) => $dsn->getHost() === 'localhost' and $dsn->getScheme() === 'smtp';
 
         $transportFactory->shouldReceive('supports')->once()->withArgs($arg)->andReturn(true);
         $transportFactory->shouldReceive('create')->once()->withArgs($arg)
@@ -52,7 +52,7 @@ final class TransportResolverTest extends TestCase
 
         $transportResolver = new TransportResolver(new Transport([$transportFactory]));
 
-        self::assertSame($transport, $transportResolver->resolve('smtp://localhost'));
+        $this->assertSame($transport, $transportResolver->resolve('smtp://localhost'));
     }
 
     public function testNotRegisteredTransportShouldTrowAnException(): void

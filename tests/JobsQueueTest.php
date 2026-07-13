@@ -13,7 +13,7 @@ use Spiral\SendIt\Config\MailerConfig;
 use Spiral\SendIt\MailQueue;
 use Spiral\SendIt\MessageSerializer;
 
-final class JobsQueueTest extends TestCase
+class JobsQueueTest extends TestCase
 {
     public function testQueue(): void
     {
@@ -23,7 +23,7 @@ final class JobsQueueTest extends TestCase
             new MailerConfig([
                 'queue' => 'mailer',
             ]),
-            $queue,
+            $queue
         );
 
         $mail = new Message('test', ['email@domain.com'], ['key' => 'value']);
@@ -33,13 +33,13 @@ final class JobsQueueTest extends TestCase
         $mail->setBCC('admin2@google.com');
 
         $queue->expects('push')->withArgs(
-            static function ($job, $data, Options $options) use ($mail): bool {
-                self::assertSame(MailQueue::JOB_NAME, $job);
-                self::assertSame($data, MessageSerializer::pack($mail));
-                self::assertSame('mailer', $options->getQueue());
+            function ($job, $data, Options $options) use ($mail) {
+                $this->assertSame(MailQueue::JOB_NAME, $job);
+                $this->assertSame($data, MessageSerializer::pack($mail));
+                $this->assertSame('mailer', $options->getQueue());
 
                 return true;
-            },
+            }
         );
 
         $mailer->send($mail);

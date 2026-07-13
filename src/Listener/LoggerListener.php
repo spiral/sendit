@@ -13,8 +13,9 @@ use Symfony\Component\Mime\Email;
 final class LoggerListener
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
-    ) {}
+        private readonly LoggerInterface $logger
+    ) {
+    }
 
     public function onMessageSent(MessageSent $event): void
     {
@@ -22,9 +23,9 @@ final class LoggerListener
             \sprintf(
                 'Sent `%s` to "%s"',
                 $event->message->getSubject(),
-                \implode('", "', $this->getRecipients($event->message)),
+                \implode('", "', $this->getRecipients($event->message))
             ),
-            ['emails' => $this->getRecipients($event->message)],
+            ['emails' => $this->getRecipients($event->message)]
         );
     }
 
@@ -35,17 +36,17 @@ final class LoggerListener
                 'Failed to send `%s` to "%s": %s',
                 $event->message->getSubject(),
                 \implode('", "', $this->getRecipients($event->message)),
-                $event->exception->getMessage(),
+                $event->exception->getMessage()
             ),
-            ['emails' => $this->getRecipients($event->message)],
+            ['emails' => $this->getRecipients($event->message)]
         );
     }
 
     private function getRecipients(Email $message): array
     {
         return \array_map(
-            static fn(Address $address): string => $address->toString(),
-            \array_merge($message->getTo(), $message->getCc(), $message->getBcc()),
+            static fn (Address $address): string => $address->toString(),
+            \array_merge($message->getTo(), $message->getCc(), $message->getBcc())
         );
     }
 }

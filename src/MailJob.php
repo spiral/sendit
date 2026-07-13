@@ -20,8 +20,9 @@ final class MailJob implements HandlerInterface
         private readonly MailerConfig $config,
         private readonly SymfonyMailer $mailer,
         private readonly RendererInterface $renderer,
-        private readonly ?EventDispatcherInterface $dispatcher = null,
-    ) {}
+        private readonly ?EventDispatcherInterface $dispatcher = null
+    ) {
+    }
 
     /**
      * @throws TransportExceptionInterface
