@@ -8,7 +8,7 @@ use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\RawMessage;
 
-final class MailInterceptor implements MailerInterface
+class MailInterceptor implements MailerInterface
 {
     private RawMessage $last;
 
